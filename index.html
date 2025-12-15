@@ -9,29 +9,638 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Estilos personalizados -->
+    
     <style>
         :root {
-            --color-primary: #291b68;
+            --color-primary: #27F9D4;
             --color-secondary: #FF729F;
-            --color-background: #2831449c;
-            --color-success: #27F9D4;
-            --color-warning: #F9A826;
-            --color-danger: #FF4757;
-            --color-dark: #22155e;
+            --color-background: #273043;
+            --color-dark: #1a2332;
             --color-light: #f8f9fa;
+            --color-table-header: #424b5f;
+            --color-table-hover: #324466;
+            --color-table: #3a4357;
         }
 
         body {
             background-color: var(--color-background);
-            color: var(--color-dark);
+            color: var(--color-light);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Fondo con logo semitransparente */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><text x="50%" y="40%" text-anchor="middle" fill="rgba(39,249,212,0.1)" font-family="Arial" font-size="24" font-weight="bold">Antología Box23</text><text x="50%" y="60%" text-anchor="middle" fill="rgba(39,249,212,0.1)" font-family="Arial" font-size="18">Sistema de Seguimiento</text></svg>');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 400px;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .container-fluid {
             padding: 15px;
+            position: relative;
+            z-index: 1;
         }
 
+        .navbar-brand {
+            color: var(--color-primary) !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .navbar-brand img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .card {
+            background-color: var(--color-dark);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            color: var(--color-light);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-dark);
+            border-bottom: none;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: bold;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--color-light);
+            border: none;
+            padding: 12px 20px;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-dark);
+            border: none;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+        }
+
+        .table {
+            color: var(--color-light) !important;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: var(--color-table) !important;
+        }
+
+        .table th {
+            background-color: var(--color-table-header);
+            color: var(--color-primary) !important;
+            border-color: rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+        }
+
+        .table td {
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--color-light) !important;
+            padding: 10px 15px;
+            vertical-align: middle;
+            background-color: var(--color-table) !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: var(--color-table-hover) !important;
+        }
+
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--color-light);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 0.25rem rgba(39, 249, 212, 0.25);
+            color: var(--color-light);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-dark);
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #1de5c0;
+            border-color: #1de5c0;
+            color: var(--color-dark);
+        }
+
+        .btn-success {
+            background-color: var(--color-secondary);
+            border-color: var(--color-secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #ff5a8f;
+            border-color: #ff5a8f;
+            color: white;
+        }
+
+        .btn-info {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: var(--color-dark);
+        }
+
+        .summary-card {
+            border-left: 4px solid var(--color-primary);
+            color: var(--color-light);
+        }
+
+        .summary-card .card-title {
+            color: var(--color-primary);
+        }
+
+        .summary-card .card-text {
+            color: var(--color-light);
+        }
+
+        #exportBtn {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border: none;
+            color: var(--color-dark);
+            font-weight: bold;
+        }
+
+        .class-time {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--color-light);
+        }
+
+        .class-time h6 {
+            color: var(--color-primary);
+        }
+
+        .attendance-badge {
+            font-size: 0.85em;
+            padding: 5px 8px;
+        }
+
+        .package-warning {
+            background-color: rgba(255, 114, 159, 0.2);
+            border-left: 4px solid var(--color-secondary);
+            color: var(--color-light);
+        }
+
+        .membership-warning {
+            background-color: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            color: var(--color-light);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .import-export-card {
+            border: 2px dashed var(--color-primary);
+            color: var(--color-light);
+        }
+
+        .whatsapp-modal .message-preview {
+            background-color: rgba(39, 249, 212, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #25D366;
+            color: var(--color-light);
+        }
+
+        .autorestore-section {
+            background-color: rgba(39, 249, 212, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: var(--color-light);
+        }
+
+        .fix-highlight {
+            background-color: rgba(39, 249, 212, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--color-primary);
+            color: var(--color-light);
+        }
+
+        .tab-content {
+            min-height: 500px;
+        }
+
+        .modal-content {
+            background-color: var(--color-dark);
+            color: var(--color-light);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--color-dark);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-label {
+            color: var(--color-primary);
+        }
+
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .alert-warning {
+            background-color: rgba(255, 193, 7, 0.2);
+            border-color: #ffc107;
+            color: var(--color-light);
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2327F9D4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        }
+
+        .form-select option {
+            background-color: var(--color-dark);
+            color: var(--color-light);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-placeholder {
+            width: 200px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dark);
+            font-weight: bold;
+            font-size: 24px;
+            margin: 0 auto;
+        }
+
+        .date-range {
+            background-color: rgba(39, 249, 212, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            background-color: var(--color-dark);
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .report-summary {
+            background-color: rgba(39, 249, 212, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: rgba(39, 249, 212, 0.2) !important;
+        }
+
+        .whatsapp-survey {
+            background-color: rgba(39, 249, 212, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .backup-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1050;
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .badge {
+            font-weight: 500;
+        }
+
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .google-form-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--color-primary);
+        }
+
+        .google-form-link:hover {
+            color: #1de5c0;
+            text-decoration: none;
+            border-bottom: 1px solid #1de5c0;
+        }
+
+        .validation-error {
+            border: 1px solid #ff5a8f !important;
+            box-shadow: 0 0 0 0.25rem rgba(255, 90, 143, 0.25) !important;
+        }
+
+        .user-status-badge {
+            font-size: 0.75em;
+            padding: 3px 6px;
+        }
+
+        .search-box {
+            margin-bottom: 15px;
+        }
+
+        .emergency-info {
+            background-color: rgba(255, 114, 159, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .phone-validation-error {
+            color: #ff5a8f;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .attendance-user-list {
+            background-color: var(--color-dark);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .attendance-user-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--color-light) !important;
+        }
+
+        .attendance-user-item:last-child {
+            border-bottom: none;
+        }
+
+        .attendance-user-info {
+            flex: 1;
+        }
+
+        .attendance-user-name {
+            font-weight: 500;
+            color: var(--color-light) !important;
+            margin-bottom: 5px;
+        }
+
+        .attendance-user-details {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        .attendance-check-container {
+            margin-right: 15px;
+        }
+
+        .attendance-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        #attendance * {
+            color: var(--color-light) !important;
+        }
+
+        .attendance-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .attendance-stat-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .attendance-stat-icon {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+
+        .attendance-stat-content h5 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .attendance-stat-content p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .attendance-filters {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .attendance-quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Estilos para el modal de importación */
+        .import-summary {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .import-summary-item {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .import-summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .import-success {
+            color: var(--color-primary);
+        }
+
+        .import-warning {
+            color: #ffc107;
+        }
+
+        .import-error {
+            color: #ff5a8f;
+        }
+
+        /* Estilos para el modal de cumpleaños */
+        .birthday-badge {
+            background: linear-gradient(135deg, #FF729F, #FFB347);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .birthday-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .birthday-item:last-child {
+            border-bottom: none;
+        }
+
+        .birthday-user-info {
+            flex: 1;
+        }
+
+        .birthday-user-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .birthday-user-details {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .birthday-date {
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .birthday-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Estilos para las alertas de inasistencias */
+        .absence-alert-item {
+            background-color: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .absence-alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .absence-alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Estilos personalizados para la aplicación */
         h1 {
             color: var(--color-primary);
             font-weight: 700;
@@ -39,113 +648,158 @@
             margin-bottom: 20px;
         }
 
-        .nav-tabs {
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        .nav-tabs .nav-link {
-            color: var(--color-dark);
-            border: none;
-            font-weight: 600;
-            padding: 12px 20px;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: var(--color-primary);
-            border-bottom: 3px solid var(--color-primary);
-            background-color: transparent;
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .search-box {
+            position: relative;
             margin-bottom: 20px;
-            background: white;
         }
 
-        .card-header {
+        .search-box .form-control {
+            padding-left: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-primary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-            border-radius: 12px 12px 0 0 !important;
-            padding: 15px 20px;
-            font-weight: 600;
+            color: var(--color-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
-        .form-control, .form-select {
-            border: 1px solid #dee2e6;
+        .exercise-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            padding: 10px 15px;
-            font-size: 0.95rem;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
-        .form-control:focus, .form-select:focus {
+        .exercise-card:hover {
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 0.2rem rgba(124, 119, 185, 0.25);
+            box-shadow: 0 4px 8px rgba(39, 249, 212, 0.1);
         }
 
-        .btn {
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            border: none;
+        .rm-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-primary);
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #27F9D4, #1D8A99);
-            color: var(--color-dark);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #F9A826, #FF8C00);
-            color: white;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #FF4757, #DC3545);
-            color: white;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        .table thead th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid var(--color-primary);
-            font-weight: 600;
-            color: var(--color-dark);
-        }
-
-        .table tbody tr:hover {
-            background-color: rgba(124, 119, 185, 0.05);
-        }
-
-        .phone-validation-error {
-            color: var(--color-danger);
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .modal-content {
-            border-radius: 12px;
+        .progress-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 10px;
+            margin: 10px 0;
             overflow: hidden;
         }
 
-        .modal-header {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            border-radius: 10px;
         }
 
-        .progress-bar {
-            background: linear-gradient(90deg, var(--color-success), var(--color-secondary));
-            border-radius: 4px;
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .progression-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .current-progression {
+            background-color: rgba(39, 249, 212, 0.1);
+            border-left-color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .next-progression {
+            background-color: rgba(255, 114, 159, 0.1);
+            border-left-color: var(--color-secondary);
+            font-weight: 600;
+        }
+
+        .whatsapp-options {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .data-preview {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .csv-preview-table td, .csv-preview-table th {
+            vertical-align: middle;
+        }
+        
+        .csv-status-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+        }
+
+        /* Estilos para GIFs de ejercicios */
+        .exercise-gif-container {
+            margin-top: 15px;
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--color-primary);
+        }
+        
+        .gif-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid var(--color-primary);
+            box-shadow: 0 4px 12px rgba(39, 249, 212, 0.2);
+        }
+        
+        .gif-placeholder {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(45deg, rgba(39, 249, 212, 0.1), rgba(255, 114, 159, 0.1));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-light);
+            font-style: italic;
+            margin: 0 auto;
+            border: 2px dashed var(--color-primary);
         }
 
         .badge-category {
@@ -159,28 +813,6 @@
         .badge-intermediate { background-color: #1D8A99; color: white; }
         .badge-advanced { background-color: #7C77B9; color: white; }
         .badge-elite { background-color: #FF8C00; color: white; }
-
-        .summary-card {
-            border: none;
-            border-radius: 10px;
-            transition: transform 0.3s;
-        }
-
-        .summary-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .summary-card .card-body {
-            padding: 20px;
-        }
-
-        .exercise-progression {
-            background-color: #f8f9fa;
-            border-left: 4px solid var(--color-success);
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 0 8px 8px 0;
-        }
 
         .record-badge {
             background: linear-gradient(135deg, #FFD700, #FF8C00);
@@ -218,6 +850,47 @@
                 padding: 8px 15px;
                 font-size: 0.9rem;
             }
+
+            .attendance-stats {
+                flex-direction: column;
+            }
+
+            .attendance-stat-item {
+                width: 100%;
+            }
+
+            .attendance-user-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .attendance-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .birthday-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .birthday-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .absence-alert-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .absence-alert-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
 
         @media (max-width: 576px) {
@@ -232,131 +905,6 @@
             .modal-body {
                 padding: 15px;
             }
-        }
-
-        .search-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-box .form-control {
-            padding-left: 40px;
-            background-color: #f8f9fa;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .exercise-card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-
-        .exercise-card:hover {
-            border-color: var(--color-primary);
-            box-shadow: 0 4px 8px rgba(124, 119, 185, 0.1);
-        }
-
-        .rm-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--color-primary);
-        }
-
-        .progress-container {
-            background-color: #e9ecef;
-            border-radius: 10px;
-            height: 10px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--color-success), var(--color-secondary));
-            border-radius: 10px;
-        }
-
-        .floating-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .logo-img {
-            max-height: 80px;
-            object-fit: contain;
-        }
-
-        .progression-item {
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            border-left: 3px solid var(--color-primary);
-        }
-
-        .current-progression {
-            background-color: #e7f7f4;
-            border-left-color: var(--color-success);
-            font-weight: 600;
-        }
-
-        .next-progression {
-            background-color: #fff3cd;
-            border-left-color: var(--color-warning);
-            font-weight: 600;
-        }
-
-        .whatsapp-options {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .data-preview {
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        
-        .csv-preview-table td, .csv-preview-table th {
-            vertical-align: middle;
-        }
-        
-        .csv-status-badge {
-            font-size: 0.75rem;
-            padding: 4px 8px;
         }
     </style>
 </head>
@@ -509,6 +1057,28 @@
         </div>
     </div>
 
+    <!-- Modal para GIFs de ejercicios -->
+    <div class="modal fade" id="exerciseGifModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exerciseGifModalLabel">
+                        <i class="fas fa-running"></i> Demostración del Ejercicio
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <h4 id="exerciseGifName"></h4>
+                    <img id="exerciseGifPreview" class="gif-preview img-fluid" style="max-height: 400px; display: none;">
+                    <div id="exerciseGifPlaceholder" class="gif-placeholder mt-3" style="width: 100%; height: 300px;">
+                        <i class="fas fa-question-circle fa-3x mb-3"></i><br>
+                        <p>GIF no disponible para este ejercicio</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Usuario -->
     <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -587,6 +1157,18 @@
                                 </select>
                             </div>
                         </div>
+                        
+                        <div class="mb-3" id="rmExerciseGifContainer" style="display: none;">
+                            <label class="form-label">Demostración del ejercicio:</label>
+                            <div class="exercise-gif-container">
+                                <img id="rmExerciseGif" class="gif-preview" style="display: none;">
+                                <div id="rmExerciseGifPlaceholder" class="gif-placeholder">
+                                    <i class="fas fa-running fa-2x mb-2"></i><br>
+                                    GIF de demostración se cargará aquí
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="rmWeight" class="form-label">Peso (kg) *</label>
@@ -648,6 +1230,18 @@
                                 </select>
                             </div>
                         </div>
+                        
+                        <div class="mb-3" id="progressionExerciseGifContainer" style="display: none;">
+                            <label class="form-label">Demostración del ejercicio:</label>
+                            <div class="exercise-gif-container">
+                                <img id="progressionExerciseGif" class="gif-preview" style="display: none;">
+                                <div id="progressionExerciseGifPlaceholder" class="gif-placeholder">
+                                    <i class="fas fa-running fa-2x mb-2"></i><br>
+                                    GIF de demostración se cargará aquí
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="progressionLevel" class="form-label">Nivel actual *</label>
@@ -708,7 +1302,9 @@
     <div class="container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="text-center flex-grow-1"><i class="fas fa-dumbbell"></i> Antología Box23 - Sistema de Seguimiento</h1>
-            <img src="antologia_logo.png" alt="Logo Antología Box23" class="img-fluid logo-img d-none d-md-block">
+            <div class="logo-placeholder d-none d-md-block">
+                <i class="fas fa-dumbbell me-2"></i>Antología Box23
+            </div>
         </div>
         
         <ul class="nav nav-tabs mb-4" id="mainTab" role="tablist">
@@ -997,62 +1593,6 @@
                         </div>
                     </div>
                     
-                    <!-- Card Importar/Exportar Usuarios CSV (NUEVO) -->
-                    <!--<div class="col-md-6"> SECCION DE CARGAR CON CVS INAHILITADA PARA INVITADOS
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0"><i class="fas fa-users-cog"></i> Gestionar Usuarios desde CSV</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Cargar Usuarios desde CSV</label>
-                                    <input type="file" class="form-control" id="loadUsersCSV" accept=".csv" 
-                                           data-bs-toggle="tooltip" 
-                                           data-bs-title="Formato: Nombre, Teléfono, Categoría, Peso, Notas (opcional)">
-                                    <small class="text-muted">Archivo CSV con columnas: Nombre, Teléfono, Categoría, Peso, Notas</small>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Plantilla CSV</label>
-                                    <button class="btn btn-outline-primary w-100" id="downloadCSVTemplate">
-                                        <i class="fas fa-download"></i> Descargar Plantilla
-                                    </button>
-                                </div>
-                                
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i>
-                                    <small>
-                                        <strong>Nota:</strong> Los usuarios se identificarán por teléfono. 
-                                        Si el teléfono ya existe, se mostrarán los cambios propuestos antes de actualizar.
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0"><i class="fas fa-file-import"></i> Restaurar Datos Completos</h5>
-                            </div>
-                            <div class="card-body text-center">
-                                <p>Restaurar datos desde un archivo Excel previamente exportado</p>
-                                <div class="mb-3">
-                                    <input type="file" class="form-control" id="restoreFile" accept=".xlsx, .xls">
-                                </div>
-                                <button class="btn btn-primary w-100 mb-3" id="restoreData" disabled>
-                                    <i class="fas fa-upload"></i> Restaurar Datos
-                                </button>
-                                <div class="alert alert-warning">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <small>Esta acción reemplazará todos los datos actuales. Asegúrese de tener un respaldo.</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
@@ -1135,6 +1675,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
     <script>
         // Datos iniciales
         let users = JSON.parse(localStorage.getItem('antologia_users')) || [];
@@ -1145,77 +1686,88 @@
         let csvUsersData = [];
         let csvProcessingResults = [];
         
-        // Lista de ejercicios (basada en el archivo proporcionado)
+        // Lista de ejercicios con GIFs demostrativos
         const exercises = [
             // Ejercicios Gimnásticos
             { 
                 name: "Pull-up", 
                 category: "gimnastic",
-                progressions: ["Pull-up con banda", "Jumping pull-up", "Pull-up estricto", "Weighted pull-up"]
+                progressions: ["Pull-up con banda", "Jumping pull-up", "Pull-up estricto", "Weighted pull-up"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Push-up", 
                 category: "gimnastic",
-                progressions: ["Push-up en pared", "Push-up en rodillas", "Push-up completo", "Push-up con elevación"]
+                progressions: ["Push-up en pared", "Push-up en rodillas", "Push-up completo", "Push-up con elevación"],
+                gif: "https://media.giphy.com/media/26ufjJgV8pWfGSvOE/giphy.gif"
             },
             { 
                 name: "Burpee", 
                 category: "gimnastic",
-                progressions: ["Burpee sin push-up", "Burpee completo", "Burpee con salto", "Burpee con pull-up"]
+                progressions: ["Burpee sin push-up", "Burpee completo", "Burpee con salto", "Burpee con pull-up"],
+                gif: "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
             },
             { 
                 name: "Box Jump", 
                 category: "gimnastic",
-                progressions: ["Step-up", "Box jump bajo", "Box jump medio", "Box jump alto"]
+                progressions: ["Step-up", "Box jump bajo", "Box jump medio", "Box jump alto"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Handstand Push-up", 
                 category: "gimnastic",
-                progressions: ["Pike push-up", "Handstand contra pared", "Handstand push-up Kipping", "Handstand push-up completo", "Handstand push-up deficit"]
+                progressions: ["Pike push-up", "Handstand contra pared", "Handstand push-up Kipping", "Handstand push-up completo", "Handstand push-up deficit"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Handstand walk", 
                 category: "gimnastic",
-                progressions: ["Handstand hold", "Handstand Shoulder Taps", "Handstand wall lateral walking", "Handstand walk corto", "Handstand walk medio", "Handstand walk largo"]
+                progressions: ["Handstand hold", "Handstand Shoulder Taps", "Handstand wall lateral walking", "Handstand walk corto", "Handstand walk medio", "Handstand walk largo"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Wall walk", 
                 category: "gimnastic",
-                progressions: ["Inclinación contra pared", "Wall walk parcial", "Wall walk completo"]
+                progressions: ["Inclinación contra pared", "Wall walk parcial", "Wall walk completo"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Pistol Squat", 
                 category: "gimnastic",
-                progressions: ["Pistol Squat en cajón", "Pistol Squat con pie atras", "Pistol Squat asistido", "Pistol Squat con elevacion y soporte", "Pistol Squat sin elevacion con soporte", "Pistol Squat libre"]
+                progressions: ["Pistol Squat en cajón", "Pistol Squat con pie atras", "Pistol Squat asistido", "Pistol Squat con elevacion y soporte", "Pistol Squat sin elevacion con soporte", "Pistol Squat libre"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Toes-to-bar", 
                 category: "gimnastic",
-                progressions: ["Knee raises", "Toes-to-rig", "Toes-to-bar asistido", "Toes-to-bar completo", "Toes-to-bar enlazado"]
+                progressions: ["Knee raises", "Toes-to-rig", "Toes-to-bar asistido", "Toes-to-bar completo", "Toes-to-bar enlazado"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Rope Climb", 
                 category: "gimnastic",
-                progressions: ["Rope pull", "Rope climb asistido", "Rope climb con piernas", "Rope climb sin piernas"]
+                progressions: ["Rope pull", "Rope climb asistido", "Rope climb con piernas", "Rope climb sin piernas"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             { 
                 name: "Muscle-up", 
                 category: "gimnastic",
-                progressions: ["Pull-up explosivo", "Transition drills", "Muscle-up con banda", "Muscle-up completo", "Muscle-up completo enlazado", "Muscle-up estricto"]
+                progressions: ["Pull-up explosivo", "Transition drills", "Muscle-up con banda", "Muscle-up completo", "Muscle-up completo enlazado", "Muscle-up estricto"],
+                gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
             },
             
-            // Ejercicios de Levantamiento (solo para RM)
-            { name: "Deadlift", category: "weightlifting" },
-            { name: "Snatch", category: "weightlifting" },
-            { name: "Thruster", category: "weightlifting" },
-            { name: "Cluster", category: "weightlifting" },
-            { name: "Clean & Jerk", category: "weightlifting" },
-            { name: "Push Jerk", category: "weightlifting" },
-            { name: "Split Jerk", category: "weightlifting" },
-            { name: "Front Squat", category: "weightlifting" },
-            { name: "Back Squat", category: "weightlifting" },
-            { name: "Bench press", category: "weightlifting" },
-            { name: "Clean", category: "weightlifting" }
+            // Ejercicios de Levantamiento
+            { name: "Deadlift", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Snatch", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Thruster", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Cluster", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Clean & Jerk", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Push Jerk", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Split Jerk", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Front Squat", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Back Squat", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Bench press", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
+            { name: "Clean", category: "weightlifting", gif: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" }
         ];
 
         // Inicialización
@@ -1251,6 +1803,17 @@
                     $('#progressionExercise').append(`<option value="${exercise.name}">${exercise.name}</option>`);
                     $('#filterProgressionExercise').append(`<option value="${exercise.name}">${exercise.name}</option>`);
                 });
+            
+            // Evento para mostrar GIFs de ejercicios
+            $('#rmExercise').change(function() {
+                const exerciseName = $(this).val();
+                showExerciseGif(exerciseName, 'rm');
+            });
+
+            $('#progressionExercise').change(function() {
+                const exerciseName = $(this).val();
+                showExerciseGif(exerciseName, 'progression');
+            });
             
             // Evento para cargar progresiones cuando se selecciona un ejercicio
             $('#progressionExercise').change(function() {
@@ -1302,15 +1865,6 @@
                 exportData();
             });
             
-            // Restaurar datos
-            $('#restoreFile').change(function() {
-                $('#restoreData').prop('disabled', !$(this).val());
-            });
-            
-            $('#restoreData').click(function() {
-                restoreData();
-            });
-            
             // WhatsApp: eventos para actualizar vista previa
             $('#whatsappUserSelect, #whatsappDataType, #includeCSV, #whatsappMessage').on('change input', function() {
                 updateCSVPreview();
@@ -1352,362 +1906,67 @@
             // Cargar usuarios en modal WhatsApp
             loadWhatsAppUsers();
             
-            // Nuevo: Evento para cargar usuarios desde CSV
-            $('#loadUsersCSV').change(function() {
-                handleCSVUpload(this);
-            });
-            
-            // Nuevo: Descargar plantilla CSV
-            $('#downloadCSVTemplate').click(function() {
-                downloadCSVTemplate();
-            });
-            
-            // Nuevo: Confirmar carga de CSV
+            // Confirmar carga de CSV
             $('#confirmCSVUpload').click(function() {
                 confirmCSVUpload();
             });
         }
 
-        // ==================== FUNCIONES PARA CSV ====================
+        // ==================== FUNCIONES PARA GIFs ====================
         
-        function handleCSVUpload(input) {
-            const file = input.files[0];
-            if (!file) return;
+        function showExerciseGif(exerciseName, type) {
+            // Buscar el ejercicio para obtener su GIF
+            let exercise = exercises.find(ex => ex.name === exerciseName && ex.category === "gimnastic");
             
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                try {
-                    const csvText = e.target.result;
-                    const parsedData = parseCSV(csvText);
-                    
-                    if (!parsedData || parsedData.length === 0) {
-                        alert('El archivo CSV está vacío o no tiene el formato correcto');
-                        return;
-                    }
-                    
-                    // Procesar los datos del CSV
-                    processCSVData(parsedData);
-                    
-                    // Mostrar vista previa
-                    showCSVPreview();
-                    
-                } catch (error) {
-                    alert('Error al leer el archivo CSV: ' + error.message);
-                }
-            };
-            
-            reader.readAsText(file, 'UTF-8');
-        }
-
-        function parseCSV(csvText) {
-            const lines = csvText.split('\n');
-            if (lines.length < 2) return null;
-            
-            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-            
-            // Validar encabezados mínimos
-            const requiredHeaders = ['nombre', 'teléfono', 'categoría', 'peso'];
-            for (const req of requiredHeaders) {
-                if (!headers.includes(req)) {
-                    alert(`Falta la columna requerida: ${req}`);
-                    return null;
-                }
+            // Si no se encuentra en ejercicios gimnásticos, buscar en levantamiento
+            if (!exercise && type === 'rm') {
+                exercise = exercises.find(ex => ex.name === exerciseName && ex.category === "weightlifting");
             }
             
-            const data = [];
+            const containerId = `#${type}ExerciseGifContainer`;
+            const gifId = `#${type}ExerciseGif`;
+            const placeholderId = `#${type}ExerciseGifPlaceholder`;
             
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
+            if (exercise && exercise.gif) {
+                $(gifId).attr('src', exercise.gif).show();
+                $(placeholderId).hide();
+                $(containerId).show();
                 
-                const values = parseCSVLine(line);
-                
-                if (values.length >= 4) {
-                    const item = {
-                        name: values[headers.indexOf('nombre')] || '',
-                        phone: values[headers.indexOf('teléfono')] ? values[headers.indexOf('teléfono')].replace(/\D/g, '') : '',
-                        category: values[headers.indexOf('categoría')] || '',
-                        weight: parseFloat(values[headers.indexOf('peso')]) || 0,
-                        notes: headers.includes('notas') ? (values[headers.indexOf('notas')] || '') : ''
-                    };
-                    
-                    // Validar datos básicos
-                    if (item.name && item.phone && item.phone.length === 10 && item.category && item.weight > 0) {
-                        data.push(item);
-                    }
-                }
+                // Agregar información del ejercicio
+                $(containerId + ' .exercise-gif-container').append(`
+                    <small class="text-muted mt-2 d-block">
+                        <i class="fas fa-info-circle"></i> 
+                        ${exercise.category === 'gimnastic' ? 'Ejercicio gimnástico' : 'Ejercicio de levantamiento'}
+                    </small>
+                `);
+            } else {
+                $(gifId).hide();
+                $(placeholderId).show().html(`
+                    <i class="fas fa-question-circle fa-2x mb-2"></i><br>
+                    <small>No hay GIF disponible para "${exerciseName}"</small>
+                `);
+                $(containerId).show();
             }
-            
-            return data;
         }
 
-        function parseCSVLine(line) {
-            const values = [];
-            let current = '';
-            let inQuotes = false;
+        function showExerciseGifModal(exerciseName) {
+            const exercise = exercises.find(ex => ex.name === exerciseName);
             
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    values.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
+            $('#exerciseGifName').text(exerciseName);
+            
+            if (exercise && exercise.gif) {
+                $('#exerciseGifPreview').attr('src', exercise.gif).show();
+                $('#exerciseGifPlaceholder').hide();
+            } else {
+                $('#exerciseGifPreview').hide();
+                $('#exerciseGifPlaceholder').show().html(`
+                    <i class="fas fa-question-circle fa-3x mb-3"></i><br>
+                    <p>No hay GIF disponible para "${exerciseName}"</p>
+                    <small class="text-muted">Busca el ejercicio en YouTube para ver técnicas correctas</small>
+                `);
             }
             
-            values.push(current.trim());
-            return values;
-        }
-
-        function processCSVData(csvData) {
-            csvUsersData = csvData;
-            csvProcessingResults = [];
-            
-            let newUsers = 0;
-            let updatedUsers = 0;
-            let unchangedUsers = 0;
-            
-            csvData.forEach((csvUser, index) => {
-                // Buscar usuario existente por teléfono
-                const existingUser = users.find(u => u.phone === csvUser.phone);
-                
-                if (!existingUser) {
-                    // Usuario nuevo
-                    csvProcessingResults.push({
-                        index: index,
-                        user: csvUser,
-                        status: 'new',
-                        existingUser: null,
-                        changes: null,
-                        valid: true
-                    });
-                    newUsers++;
-                } else {
-                    // Usuario existente - comparar datos
-                    const changes = compareUsers(existingUser, csvUser);
-                    
-                    if (changes.length > 0) {
-                        // Hay cambios
-                        csvProcessingResults.push({
-                            index: index,
-                            user: csvUser,
-                            status: 'update',
-                            existingUser: existingUser,
-                            changes: changes,
-                            valid: true
-                        });
-                        updatedUsers++;
-                    } else {
-                        // Sin cambios
-                        csvProcessingResults.push({
-                            index: index,
-                            user: csvUser,
-                            status: 'unchanged',
-                            existingUser: existingUser,
-                            changes: [],
-                            valid: true
-                        });
-                        unchangedUsers++;
-                    }
-                }
-            });
-            
-            // Actualizar contadores en el modal
-            $('#newUsersCount').text(newUsers);
-            $('#updatedUsersCount').text(updatedUsers);
-            $('#unchangedUsersCount').text(unchangedUsers);
-        }
-
-        function compareUsers(existing, csvUser) {
-            const changes = [];
-            
-            if (existing.name !== csvUser.name) {
-                changes.push({
-                    field: 'Nombre',
-                    old: existing.name,
-                    new: csvUser.name
-                });
-            }
-            
-            if (existing.category !== csvUser.category) {
-                changes.push({
-                    field: 'Categoría',
-                    old: existing.category,
-                    new: csvUser.category
-                });
-            }
-            
-            if (Math.abs(existing.weight - csvUser.weight) > 0.1) {
-                changes.push({
-                    field: 'Peso',
-                    old: existing.weight + ' kg',
-                    new: csvUser.weight + ' kg'
-                });
-            }
-            
-            if (existing.notes !== csvUser.notes) {
-                const oldNotes = existing.notes || '(vacío)';
-                const newNotes = csvUser.notes || '(vacío)';
-                if (oldNotes !== newNotes) {
-                    changes.push({
-                        field: 'Notas',
-                        old: oldNotes.substring(0, 30) + (oldNotes.length > 30 ? '...' : ''),
-                        new: newNotes.substring(0, 30) + (newNotes.length > 30 ? '...' : '')
-                    });
-                }
-            }
-            
-            return changes;
-        }
-
-        function showCSVPreview() {
-            const tbody = $('#csvPreviewContent');
-            tbody.empty();
-            
-            csvProcessingResults.forEach(result => {
-                let statusBadge = '';
-                let actionText = '';
-                let detailsHtml = '';
-                
-                switch(result.status) {
-                    case 'new':
-                        statusBadge = '<span class="badge bg-success csv-status-badge">Nuevo</span>';
-                        actionText = 'Se agregará como nuevo usuario';
-                        detailsHtml = '<em class="text-success">Usuario no existente</em>';
-                        break;
-                    case 'update':
-                        statusBadge = '<span class="badge bg-warning csv-status-badge">Actualizar</span>';
-                        actionText = 'Se actualizarán los siguientes campos:';
-                        detailsHtml = '<ul class="mb-0" style="padding-left: 20px;">';
-                        result.changes.forEach(change => {
-                            detailsHtml += `<li><strong>${change.field}:</strong> "${change.old}" → "${change.new}"</li>`;
-                        });
-                        detailsHtml += '</ul>';
-                        break;
-                    case 'unchanged':
-                        statusBadge = '<span class="badge bg-info csv-status-badge">Sin cambios</span>';
-                        actionText = 'No se realizarán cambios';
-                        detailsHtml = '<em class="text-info">Los datos son idénticos</em>';
-                        break;
-                    default:
-                        statusBadge = '<span class="badge bg-danger csv-status-badge">Error</span>';
-                        actionText = 'Datos inválidos';
-                        detailsHtml = '<em class="text-danger">Verifique los datos</em>';
-                }
-                
-                const row = `
-                    <tr>
-                        <td>${statusBadge}</td>
-                        <td><strong>${result.user.name}</strong></td>
-                        <td>${result.user.phone}</td>
-                        <td>${result.user.category}</td>
-                        <td>${result.user.weight} kg</td>
-                        <td>${actionText}</td>
-                        <td>${detailsHtml}</td>
-                    </tr>
-                `;
-                
-                tbody.append(row);
-            });
-            
-            // Mostrar modal
-            $('#csvPreviewModal').modal('show');
-        }
-
-        function confirmCSVUpload() {
-            let usersAdded = 0;
-            let usersUpdated = 0;
-            
-            csvProcessingResults.forEach(result => {
-                if (!result.valid) return;
-                
-                switch(result.status) {
-                    case 'new':
-                        // Crear nuevo usuario
-                        const newUser = {
-                            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-                            name: result.user.name,
-                            phone: result.user.phone,
-                            category: result.user.category,
-                            weight: result.user.weight,
-                            notes: result.user.notes || '',
-                            createdAt: new Date().toISOString(),
-                            active: true
-                        };
-                        users.push(newUser);
-                        usersAdded++;
-                        break;
-                        
-                    case 'update':
-                        // Actualizar usuario existente
-                        const existingIndex = users.findIndex(u => u.phone === result.user.phone);
-                        if (existingIndex !== -1) {
-                            users[existingIndex] = {
-                                ...users[existingIndex],
-                                name: result.user.name,
-                                category: result.user.category,
-                                weight: result.user.weight,
-                                notes: result.user.notes || users[existingIndex].notes
-                            };
-                            usersUpdated++;
-                        }
-                        break;
-                }
-            });
-            
-            // Guardar en localStorage
-            localStorage.setItem('antologia_users', JSON.stringify(users));
-            
-            // Actualizar interfaz
-            loadUsers();
-            updateUserSelects();
-            loadWhatsAppUsers();
-            updateStats();
-            
-            // Limpiar y cerrar
-            $('#loadUsersCSV').val('');
-            csvUsersData = [];
-            csvProcessingResults = [];
-            $('#csvPreviewModal').modal('hide');
-            
-            // Mostrar resumen
-            alert(`Carga completada:\n\n` +
-                  `• Usuarios agregados: ${usersAdded}\n` +
-                  `• Usuarios actualizados: ${usersUpdated}\n` +
-                  `• Total de usuarios en el sistema: ${users.length}`);
-        }
-
-        function downloadCSVTemplate() {
-            const templateContent = `Nombre,Teléfono,Categoría,Peso,Notas
-Juan Pérez,3201234567,principiante,75.5,Cliente nuevo
-María García,3109876543,intermedio,62.0,Prefiere entrenar en la mañana
-Carlos Rodríguez,3155555555,avanzado,85.0,
-Ana López,3001112233,elite,58.5,Atleta competitiva
-
-Instrucciones:
-1. Mantenga los encabezados en la primera fila
-2. El teléfono debe tener 10 dígitos sin espacios
-3. Categorías válidas: principiante, intermedio, avanzado, elite
-4. El peso debe ser un número (puede usar decimales)
-5. Las notas son opcionales
-6. Guarde el archivo con extensión .csv`;
-            
-            const blob = new Blob([templateContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute("href", url);
-            link.setAttribute("download", "Plantilla_Usuarios_AntologiaBox23.csv");
-            link.style.visibility = 'hidden';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            $('#exerciseGifModal').modal('show');
         }
 
         // ==================== FUNCIONES PARA WHATSAPP ====================
@@ -2232,7 +2491,13 @@ Instrucciones:
                     <tr>
                         <td>${formatDate(record.date)}</td>
                         <td>${record.userName}</td>
-                        <td>${record.exercise}</td>
+                        <td>
+                            ${record.exercise}
+                            <button class="btn btn-sm btn-outline-info ms-2" onclick="showExerciseGifModal('${record.exercise}')" 
+                                    title="Ver demostración">
+                                <i class="fas fa-play-circle"></i>
+                            </button>
+                        </td>
                         <td>${record.weight} kg</td>
                         <td>${record.reps}</td>
                         <td><strong class="text-primary">${record.rm.toFixed(1)} kg</strong></td>
@@ -2276,7 +2541,13 @@ Instrucciones:
                     <tr>
                         <td>${formatDate(progression.date)}</td>
                         <td>${progression.userName}</td>
-                        <td>${progression.exercise}</td>
+                        <td>
+                            ${progression.exercise}
+                            <button class="btn btn-sm btn-outline-info ms-2" onclick="showExerciseGifModal('${progression.exercise}')" 
+                                    title="Ver demostración">
+                                <i class="fas fa-play-circle"></i>
+                            </button>
+                        </td>
                         <td><span class="badge bg-${levelBadge}">${progression.level}</span></td>
                         <td>${progression.nextGoal || 'No especificada'}</td>
                         <td>
@@ -2327,6 +2598,10 @@ Instrucciones:
                         <div class="mt-2">
                             <small>Peso: ${record.weight} kg × ${record.reps} reps</small><br>
                             <small>Fecha: ${formatDate(record.date)}</small>
+                            <button class="btn btn-sm btn-outline-info ms-2" onclick="showExerciseGifModal('${record.exercise}')" 
+                                    title="Ver demostración">
+                                <i class="fas fa-play-circle"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -2374,6 +2649,10 @@ Instrucciones:
                         </div>
                         <div class="mt-2">
                             <small>Usuarios: ${achievement.userCount}</small>
+                            <button class="btn btn-sm btn-outline-info ms-2" onclick="showExerciseGifModal('${achievement.exercise}')" 
+                                    title="Ver demostración">
+                                <i class="fas fa-play-circle"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -2602,12 +2881,14 @@ Instrucciones:
             $('#rmForm')[0].reset();
             $('#rmDate').val(new Date().toISOString().split('T')[0]);
             $('#estimatedRM').text('0');
+            $('#rmExerciseGifContainer').hide();
         }
 
         function resetProgressionForm() {
             $('#progressionForm')[0].reset();
             $('#progressionDate').val(new Date().toISOString().split('T')[0]);
             $('#nextGoal').empty().append('<option value="">Seleccionar próxima progresión</option>');
+            $('#progressionExerciseGifContainer').hide();
         }
 
         function searchUsers(query) {
@@ -2690,87 +2971,6 @@ Instrucciones:
 
         function quickExport() {
             exportData();
-        }
-
-        function restoreData() {
-            const fileInput = $('#restoreFile')[0];
-            if (!fileInput.files.length) {
-                alert('Por favor seleccione un archivo');
-                return;
-            }
-            
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    
-                    if (workbook.Sheets['Usuarios']) {
-                        const usersData = XLSX.utils.sheet_to_json(workbook.Sheets['Usuarios']);
-                        users = usersData.map(item => ({
-                            id: item['ID'] || Date.now().toString() + Math.random(),
-                            name: item['Nombre'] || '',
-                            phone: item['Teléfono'] || '',
-                            category: item['Categoría'] || 'principiante',
-                            weight: parseFloat(item['Peso (kg)']) || 0,
-                            notes: item['Notas'] || '',
-                            createdAt: item['Fecha Creación'] || new Date().toISOString(),
-                            active: item['Estado'] !== 'Inactivo'
-                        }));
-                    }
-                    
-                    if (workbook.Sheets['RM_Levantamiento']) {
-                        const rmData = XLSX.utils.sheet_to_json(workbook.Sheets['RM_Levantamiento']);
-                        rmRecords = rmData.map(item => ({
-                            id: item['ID'] || Date.now().toString() + Math.random(),
-                            userId: users.find(u => u.name === item['Usuario'])?.id || '',
-                            userName: item['Usuario'] || '',
-                            exercise: item['Ejercicio'] || '',
-                            weight: parseFloat(item['Peso (kg)']) || 0,
-                            reps: parseInt(item['Repeticiones']) || 0,
-                            date: item['Fecha'] || new Date().toISOString().split('T')[0],
-                            rm: parseFloat(item['1RM (kg)']) || calculate1RM(parseFloat(item['Peso (kg)']) || 0, parseInt(item['Repeticiones']) || 0),
-                            notes: item['Notas'] || ''
-                        })).filter(r => r.userId);
-                    }
-                    
-                    if (workbook.Sheets['Progresiones']) {
-                        const progressionData = XLSX.utils.sheet_to_json(workbook.Sheets['Progresiones']);
-                        progressions = progressionData.map(item => ({
-                            id: item['ID'] || Date.now().toString() + Math.random(),
-                            userId: users.find(u => u.name === item['Usuario'])?.id || '',
-                            userName: item['Usuario'] || '',
-                            exercise: item['Ejercicio'] || '',
-                            level: item['Nivel Alcanzado'] || '',
-                            date: item['Fecha'] || new Date().toISOString().split('T')[0],
-                            details: item['Detalles'] || '',
-                            nextGoal: item['Próxima Meta'] || ''
-                        })).filter(p => p.userId);
-                    }
-                    
-                    localStorage.setItem('antologia_users', JSON.stringify(users));
-                    localStorage.setItem('antologia_rm', JSON.stringify(rmRecords));
-                    localStorage.setItem('antologia_progressions', JSON.stringify(progressions));
-                    
-                    loadUsers();
-                    loadRMRecords();
-                    loadProgressions();
-                    loadWhatsAppUsers();
-                    updateUserSelects();
-                    updateStats();
-                    
-                    alert('Datos restaurados exitosamente');
-                    $('#restoreFile').val('');
-                    $('#restoreData').prop('disabled', true);
-                    
-                } catch (error) {
-                    alert('Error al leer el archivo: ' + error.message);
-                }
-            };
-            
-            reader.readAsArrayBuffer(file);
         }
 
         function updateStats() {
