@@ -38,12 +38,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-         /*    background-image: <img src="antologia_logo.png" alt="Logo Antología Box23" class="img-fluid logo-img d-none d-md-block"> */
-            background-image: <img src="antologia_logo.png" alt="Logo Antología Box23" class="img-fluid logo-img d-none d-md-block">;
-            background-repeat: repeat;
+            background-image: url('antologia_logo.png');
+            background-repeat: no-repeat;
             background-position: center center;
-            background-size: 4000px;
-            opacity: 0,9;
+            background-size: contain;
+            opacity: 0.1;
             z-index: -1;
             pointer-events: none;
         }
@@ -1299,49 +1298,20 @@
         </div>
     </div>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antología Box23 - Sistema de Seguimiento</title>
-
-    <!-- Estilos internos -->
-    <style>
-        .logo-img {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 3px solid #fff; /* opcional */
-            z-index: 1000;
-        }
-    </style>
-</head>
-
-<body>
-
     <!-- Contenido principal -->
     <div class="container-fluid py-3 position-relative">
 
         <!-- Logo en la esquina superior derecha -->
         <img src="antologia_logo.png"
              alt="Logo Antología Box23"
-             class="logo-img d-none d-md-block">
+             class="logo-img d-none d-md-block" style="position: absolute; top: 20px; right: 20px; width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #fff; z-index: 1000;">
 
         <div class="d-flex justify-content-center align-items-center mb-4">
             <h1 class="text-center flex-grow-1">
                 <i class="fas fa-dumbbell"></i> Antología Box23 - Sistema de Seguimiento
             </h1>
         </div>
-     PRIMERO NOS MOVEMOS BIEN DESPUES NOS MOVEMOS MÁS
-    </div>
-
-</body>
-</html>
+        <p class="text-center mb-4">PRIMERO NOS MOVEMOS BIEN DESPUES NOS MOVEMOS MÁS</p>
 
         <ul class="nav nav-tabs mb-4" id="mainTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -1803,7 +1773,7 @@
             { name: "Snatch", category: "weightlifting", gif: "https://i.makeagif.com/media/12-16-2025/q0qopw.gif" },
             { name: "Thruster", category: "weightlifting", gif: "https://media.giphy.com/media/9iIklRRy3sA8WOb4v1/giphy.gif" },
             { name: "Cluster", category: "weightlifting", gif: "https://i.makeagif.com/media/12-16-2025/vamVa3.gif" },
-            { name: "Clean & Jerk", category: "https://i.makeagif.com/media/12-16-2025/zBVzBn.gif" },
+            { name: "Clean & Jerk", category: "weightlifting", gif: "https://i.makeagif.com/media/12-16-2025/zBVzBn.gif" },
             { name: "Push Jerk", category: "weightlifting", gif: "https://i.makeagif.com/media/12-16-2025/bVLyvU.gif" },
             { name: "Split Jerk", category: "weightlifting", gif: "https://i.makeagif.com/media/12-16-2025/iE46JM.gif" },
             { name: "Front Squat", category: "weightlifting", gif: "https://i.makeagif.com/media/12-16-2025/PzxnRS.gif" },
@@ -2542,7 +2512,7 @@
                         </td>
                         <td>${record.weight} kg</td>
                         <td>${record.reps}</td>
-                        <td><strong class="text-primary">${record.rm.toFixed(1)} kg</strong></td>
+                        <td><strong class="text-secundary">${record.rm.toFixed(1)} kg</strong></td>
                         <td>
                             <button class="btn btn-sm btn-outline-danger" onclick="deleteRMRecord('${record.id}')" title="Eliminar">
                                 <i class="fas fa-trash"></i>
@@ -2628,6 +2598,22 @@
             }
             
             recordsArray.slice(0, 5).forEach(record => {
+                // Encontrar el usuario para obtener su peso corporal
+                const user = users.find(u => u.id === record.userId);
+                let bodyWeightRatio = "";
+                
+                if (user && user.weight && user.weight > 0) {
+                    const ratio = (record.rm / user.weight).toFixed(1);
+                    bodyWeightRatio = `
+                        <div class="mt-1">
+                            <small class="text-success">
+                                <i class="fas fa-balance-scale"></i> 
+                                ${ratio}x tu peso corporal (${user.weight} kg)
+                            </small>
+                        </div>
+                    `;
+                }
+                
                 const card = `
                     <div class="exercise-card">
                         <div class="d-flex justify-content-between align-items-center">
@@ -2640,6 +2626,7 @@
                         <div class="mt-2">
                             <small>Peso: ${record.weight} kg × ${record.reps} reps</small><br>
                             <small>Fecha: ${formatDate(record.date)}</small>
+                            ${bodyWeightRatio}
                             <button class="btn btn-sm btn-outline-info ms-2" onclick="showExerciseGifModal('${record.exercise}')" 
                                     title="Ver demostración">
                                 <i class="fas fa-play-circle"></i>
@@ -2759,16 +2746,16 @@
             }
             
             content += `
-                            </div>
-                        </div>
                     </div>
-                    
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">Progresiones Actuales</h6>
-                            </div>
-                            <div class="card-body">
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Progresiones Actuales</h6>
+                    </div>
+                    <div class="card-body">
             `;
             
             if (userProgressions.length > 0) {
@@ -2798,16 +2785,16 @@
             }
             
             content += `
-                            </div>
-                        </div>
                     </div>
                 </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0">Progresión Detallada por Ejercicio</h6>
-                    </div>
-                    <div class="card-body">
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Progresión Detallada por Ejercicio</h6>
+            </div>
+            <div class="card-body">
             `;
             
             const gymnasticExercises = exercises.filter(ex => ex.category === "gimnastic");
@@ -2842,8 +2829,8 @@
             });
             
             content += `
-                    </div>
                 </div>
+            </div>
             `;
             
             $('#progressContent').html(content);
